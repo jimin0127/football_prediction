@@ -51,5 +51,5 @@ for football in naver_wfootball:
 
 print(premier_team_score)
 
-premier_csv = premier_team_score.to_csv()
+premier_csv = premier_team_score.to_csv('premier_csv.csv', header=True, index=False)
 
