@@ -2,7 +2,7 @@ import pandas as pd
 
 class prediction_football:
 
-    def __init__(self):
+    def __init__(self, team1, team2):
         df = pd.read_csv('premier_csv.csv')
 
         # 20개 팀 리스트
