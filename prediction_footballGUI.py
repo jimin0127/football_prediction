@@ -1,9 +1,9 @@
-from PyQt5.QtWidgets import  QApplication, QWidget, QDesktopWidget, QPushButton, QHBoxLayout, QVBoxLayout, QLineEdit, QComboBox, QLabel
+from PyQt5.QtWidgets import  QApplication, QWidget, QDesktopWidget, QPushButton, QHBoxLayout, QVBoxLayout, QLineEdit, QComboBox, QLabel, QDialog
 from PyQt5.QtGui import QImage, QPalette, QBrush
 import PyQt5.QtGui as QtGui
 from PyQt5.QtCore import Qt, QSize
 import sys
-import prediction_football as pf
+from prediction_football import prediction_football
 
 class MyApp(QWidget):
 
@@ -49,37 +49,37 @@ class MyApp(QWidget):
             team1_combo.addItem(team)
             team2_combo.addItem(team)
 
-        hbox = QHBoxLayout()
-        hbox.addStretch(1)
-        hbox.addWidget(label1)
-        hbox.addStretch(1)
+        self.hbox = QHBoxLayout()
+        self.hbox.addStretch(1)
+        self.hbox.addWidget(label1)
+        self.hbox.addStretch(1)
 
-        hbox1 = QHBoxLayout()
-        hbox1.addStretch(1)
-        hbox1.addWidget(team1_combo)
-        hbox1.addStretch(1)
-        hbox1.addWidget(vs_label)
-        hbox1.addStretch(1)
-        hbox1.addWidget(team2_combo)
-        hbox1.addStretch(1)
+        self.hbox1 = QHBoxLayout()
+        self.hbox1.addStretch(1)
+        self.hbox1.addWidget(team1_combo)
+        self.hbox1.addStretch(1)
+        self.hbox1.addWidget(vs_label)
+        self.hbox1.addStretch(1)
+        self.hbox1.addWidget(team2_combo)
+        self.hbox1.addStretch(1)
 
 
-        hbox2 = QHBoxLayout()
-        hbox2.addStretch(1)
-        hbox2.addWidget(apply_btn)
-        hbox2.addStretch(1)
+        self.hbox2 = QHBoxLayout()
+        self.hbox2.addStretch(1)
+        self.hbox2.addWidget(apply_btn)
+        self.hbox2.addStretch(1)
 
 
         # v
-        vbox = QVBoxLayout()
-        vbox.addLayout(hbox)
-        vbox.addStretch(1)
-        vbox.addLayout(hbox1)
-        vbox.addStretch(2)
-        vbox.addLayout(hbox2)
-        vbox.addStretch(1)
+        self.vbox = QVBoxLayout()
+        self.vbox.addLayout(self.hbox)
+        self.vbox.addStretch(1)
+        self.vbox.addLayout(self.hbox1)
+        self.vbox.addStretch(2)
+        self.vbox.addLayout(self.hbox2)
+        self.vbox.addStretch(1)
 
-        self.setLayout(vbox)
+        self.setLayout(self.vbox)
 
 
         self.setWindowTitle('My Furst Appilcation')
@@ -89,17 +89,31 @@ class MyApp(QWidget):
         self.show()
 
     def onActivated_1(self, text):
-        print(text)
         self.team1 = self.team_list[text]
 
     def onActivated_2(self, text):
-        print(text)
         self.team2 = self.team_list[text]
 
     def predict_result(self):
         print(self.team1, self.team2)
 
-        #pr = pf.prediction_football(self.team1, self.team2)
+
+        pr = prediction_football(self.team1, self.team2)
+        winner = pr.get_winner()
+        print(winner)
+        self.show_dialog(winner)
+
+
+    def show_dialog(self, winner):
+        self.result_dialog = QDialog()
+        label1 = QLabel('예상 경기 결과 : ' + winner + '승', self.result_dialog)
+
+        label1.move(100, 100)
+
+        self.result_dialog.setWindowTitle('Dialog')
+        self.result_dialog.setWindowModality(Qt.ApplicationModal)
+        self.result_dialog.resize(300, 200)
+        self.result_dialog.show()
 
 
     # 화면 가운데로 맞추기
@@ -112,6 +126,7 @@ class MyApp(QWidget):
         qr.moveCenter(cp)
         # 현재의 창을 qr의 위치로 옮긴다.
         self.move(qr.topLeft())
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
