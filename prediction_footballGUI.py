@@ -21,12 +21,12 @@ class MyApp(QWidget):
         apply_btn = QPushButton('확인', self)
         apply_btn.clicked.connect(self.predict_result)
 
-        team1_combo = QComboBox(self)
-        team2_combo = QComboBox(self)
-        team1_combo.setFont(QtGui.QFont('돋움', 10))
-        team2_combo.setFont(QtGui.QFont('돋움', 10))
-        team1_combo.activated.connect(self.onActivated_1)
-        team2_combo.activated.connect(self.onActivated_2)
+        self.team1_combo = QComboBox(self)
+        self.team2_combo = QComboBox(self)
+        self.team1_combo.setFont(QtGui.QFont('돋움', 10))
+        self.team2_combo.setFont(QtGui.QFont('돋움', 10))
+        self.team1_combo.activated.connect(self.onActivated_1)
+        self.team2_combo.activated.connect(self.onActivated_2)
 
         label1 = QLabel('경기할 두 팀을 골라주세요.')
         label1.setObjectName('label1')
@@ -46,8 +46,8 @@ class MyApp(QWidget):
                      '아스널', '셰필드', '번리', '샤우샘프턴', '에버턴', '뉴캐슬',
                      '브라이튼', '팰리스', '웨스트햄', '아스톤 빌라', '본머스', '왓포드', '노리치']
         for team in self.team_list:
-            team1_combo.addItem(team)
-            team2_combo.addItem(team)
+            self.team1_combo.addItem(team)
+            self.team2_combo.addItem(team)
 
         self.hbox = QHBoxLayout()
         self.hbox.addStretch(1)
@@ -56,11 +56,11 @@ class MyApp(QWidget):
 
         self.hbox1 = QHBoxLayout()
         self.hbox1.addStretch(1)
-        self.hbox1.addWidget(team1_combo)
+        self.hbox1.addWidget(self.team1_combo)
         self.hbox1.addStretch(1)
         self.hbox1.addWidget(vs_label)
         self.hbox1.addStretch(1)
-        self.hbox1.addWidget(team2_combo)
+        self.hbox1.addWidget(self.team2_combo)
         self.hbox1.addStretch(1)
 
 
@@ -96,13 +96,30 @@ class MyApp(QWidget):
 
     def predict_result(self):
         print(self.team1, self.team2)
-
+        if self.team1 == self.team2 :
+            print('.')
+            self.show_exception()
+            return
 
         pr = prediction_football(self.team1, self.team2)
         winner = pr.get_winner()
         print(winner)
         self.show_dialog(winner)
 
+    def show_exception(self):
+        self.exception_dialog = QDialog()
+        label1 = QLabel('중복된 팀을 선택하셨습니다. 다시 선택해주세요', self.exception_dialog)
+        label1.move(100, 100)
+        self.btn = QPushButton('확인', self.exception_dialog)
+        self.btn.clicked.connect(self.exception_dialog_close)
+
+        self.exception_dialog.setWindowTitle('Dialog')
+        self.exception_dialog.setWindowModality(Qt.ApplicationModal)
+        self.exception_dialog.resize(300, 200)
+        self.exception_dialog.show()
+
+    def exception_dialog_close(self):
+        self.exception_dialog.close()
 
     def show_dialog(self, winner):
         self.result_dialog = QDialog()
