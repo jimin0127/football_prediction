@@ -19,6 +19,8 @@ class MyApp(QWidget):
         self.setPalette(palette)
 
         apply_btn = QPushButton('확인', self)
+        #apply_btn.resize(100, 100)
+        apply_btn.setMaximumHeight(500)
         apply_btn.clicked.connect(self.predict_result)
 
         self.team1_combo = QComboBox(self)
@@ -31,11 +33,6 @@ class MyApp(QWidget):
         label1 = QLabel('경기할 두 팀을 골라주세요.')
         label1.setObjectName('label1')
         label1.setStyleSheet('QLabel#label1 {color : white}')
-
-
-
-
-
 
         label1.setFont(QtGui.QFont('돋움', 20))
 
@@ -130,6 +127,7 @@ class MyApp(QWidget):
         self.result_dialog.setWindowTitle('Dialog')
         self.result_dialog.setWindowModality(Qt.ApplicationModal)
         self.result_dialog.resize(300, 200)
+        self.center()
         self.result_dialog.show()
 
 
