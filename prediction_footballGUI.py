@@ -93,17 +93,17 @@ class MyApp(QWidget):
         self.setLayout(self.vbox)
 
 
-        self.setWindowTitle('My Furst Appilcation')
+        self.setWindowTitle('predict_soccer')
         self.resize(700, 800)
         # self.setGeometry(300, 400, 400, 200)
         self.center()
         self.show()
 
     def onActivated_1(self, text):
-        self.team1 = self.team_list[text]
+        self.team1 = self.team_list[text-1]
 
     def onActivated_2(self, text):
-        self.team2 = self.team_list[text]
+        self.team2 = self.team_list[text-1]
 
     def predict_result(self):
         print(self.team1, self.team2)
@@ -133,7 +133,7 @@ class MyApp(QWidget):
         self.btn.clicked.connect(self.exception_dialog_close)
 
 
-        self.exception_dialog.setWindowTitle('Dialog')
+        self.exception_dialog.setWindowTitle('E')
         self.exception_dialog.setWindowModality(Qt.ApplicationModal)
         self.exception_dialog.resize(300, 200)
         self.exception_dialog.show()
@@ -143,11 +143,11 @@ class MyApp(QWidget):
 
     def show_dialog(self, winner):
         self.result_dialog = QDialog()
-        label1 = QLabel('예상 경기 결과 : ' + winner + '승', self.result_dialog)
+        label1 = QLabel('예상 경기 결과 : ' + winner + ' 승', self.result_dialog)
 
-        label1.move(100, 100)
+        label1.move(70, 90)
 
-        self.result_dialog.setWindowTitle('Dialog')
+        self.result_dialog.setWindowTitle('예상 경기 결과')
         self.result_dialog.setWindowModality(Qt.ApplicationModal)
         self.result_dialog.resize(300, 200)
         self.center()
