@@ -1,8 +1,8 @@
 import pandas as pd
 
-class prediction_football:
+class test_accuracy:
 
-    def __init__(self, team1, team2):
+    def __init__(self):
         df = pd.read_csv('premier_csv.csv')
 
         # 20개 팀 리스트
@@ -48,12 +48,37 @@ class prediction_football:
                 team2_win = team2_win.append(team2_df.loc[team2_df['score_1'] < team2_df['score_2']][team2_df['team_2'] == team2])
                 #print(team2_win)
 
-                # 이긴 경기 기록의 수를 비교해서 이긴 팀 찾기
+
+                # 골 기록
+                team1_goal, team2_goal = 0, 0
+                print('countGoal')
+                team1_1 = pd.DataFrame(team1_df.loc[team1_df['team_1'] == team1])
+                team1_2 = pd.DataFrame(team1_df.loc[team1_df['team_2'] == team1])
+                for i in range(len(team1_1)):
+                    team1_goal += team1_1.iat[i, 0]
+
+                for i in range(len(team1_2)):
+                    team1_goal += team1_2.iat[i, 1]
+
+                team2_1 = pd.DataFrame(team2_df.loc[team2_df['team_1'] == team2])
+                team2_2 = pd.DataFrame(team2_df.loc[team2_df['team_2'] == team2])
+                for i in range(len(team2_1)):
+                    team2_goal += team2_1.iat[i, 0]
+
+                for i in range(len(team2_2)):
+                    team2_goal += team2_2.iat[i, 1]
+
                 winner = ''
-                if len(team1_win) > len(team2_win):
+
+                # 점수 토탈
+                team1_total = 2 * len(team1_win) + team1_goal
+                team2_total = 2 * len(team2_win) + team2_goal
+
+                if team1_total > team2_total:
                     winner = team1
-                elif len(team1_win) < len(team2_win):
+                else:
                     winner = team2
+
                 print('승리 : ' + winner)
 
 
@@ -94,7 +119,7 @@ class prediction_football:
         print('정확도 :', accuracy)
 
 if __name__ == '__main__':
-    ex = prediction_football()
+    ex = test_accuracy()
 
 
 
