@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 class prediction_football:
 
@@ -33,12 +34,15 @@ class prediction_football:
         print(self.team2 + ' 경기기록')
         print(self.team2_df)
 
-
+        
         team1_win, team2_win = self.countWin()
         team1_goal, team2_goal = self.countGoal()
+        team1_mean, team2_mean = self.meanGoal()
 
-        team1_total = 2*team1_win + team1_goal
-        team2_total = 2*team2_win + team2_goal
+        team1_total, team2_total = 0, 0
+        func = lambda x, y, z : x + y + z
+        team1_total += func(team1_win, team1_goal, team1_mean)
+        team2_total += func(team2_win, team2_goal, team2_mean)
 
         if team1_total > team2_total:
             winner = self.team1
@@ -74,24 +78,32 @@ class prediction_football:
         print('countGoal')
         team1_1 = pd.DataFrame(self.team1_df.loc[self.team1_df['team_1'] == self.team1])
         team1_2 = pd.DataFrame(self.team1_df.loc[self.team1_df['team_2'] == self.team1])
-        for i in range(len(team1_1)):
-            team1_goal += team1_1.iat[i, 0]
-
-        for i in range(len(team1_2)):
-            team1_goal += team1_2.iat[i, 1]
+        team1_goal += sum(team1_1['score_1'])
+        team1_goal += sum(team1_2['score_2'])
 
         team2_1 = pd.DataFrame(self.team2_df.loc[self.team2_df['team_1'] == self.team2])
         team2_2 = pd.DataFrame(self.team2_df.loc[self.team2_df['team_2'] == self.team2])
-        for i in range(len(team2_1)):
-            team2_goal += team2_1.iat[i, 0]
-
-        for i in range(len(team2_2)):
-            team2_goal += team2_2.iat[i, 1]
+        team2_goal += sum(team2_1['score_1'])
+        team2_goal += sum(team2_2['score_2'])
 
         return team1_goal, team2_goal
 
+    # 넣은 골 수 평균
+    def meanGoal(self):
+        team1_mean, team2_mean = 0, 0
+        team1_1 = pd.DataFrame(self.team1_df.loc[self.team1_df['team_1'] == self.team1])
+        team1_2 = pd.DataFrame(self.team1_df.loc[self.team1_df['team_2'] == self.team1])
+        team1_1mean = (team1_1.describe().loc[['mean']]).loc['mean', 'score_1']
+        team1_2mean = (team1_2.describe().loc[['mean']]).loc['mean', 'score_2']
+        team1_mean = np.mean([team1_1mean, team1_2mean])
 
+        team2_1 = pd.DataFrame(self.team2_df.loc[self.team2_df['team_1'] == self.team2])
+        team2_2 = pd.DataFrame(self.team2_df.loc[self.team2_df['team_2'] == self.team2])
+        team2_1mean = (team2_1.describe().loc[['mean']]).loc['mean', 'score_1']
+        team2_2mean = (team2_2.describe().loc[['mean']]).loc['mean', 'score_2']
+        team2_mean = np.mean([team2_1mean, team2_2mean])
 
+        return team1_mean, team2_mean
 
 
 if __name__ == '__main__':

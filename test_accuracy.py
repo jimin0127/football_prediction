@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 class test_accuracy:
 
@@ -68,11 +69,26 @@ class test_accuracy:
                 for i in range(len(team2_2)):
                     team2_goal += team2_2.iat[i, 1]
 
+
+                #골 평균
+                team1_mean, team2_mean = 0, 0
+                team1_1 = pd.DataFrame(team1_df.loc[team1_df['team_1'] == team1])
+                team1_2 = pd.DataFrame(team1_df.loc[team1_df['team_2'] == team1])
+                team1_1mean = (team1_1.describe().loc[['mean']]).loc['mean', 'score_1']
+                team1_2mean = (team1_2.describe().loc[['mean']]).loc['mean', 'score_2']
+                team1_mean = np.mean([team1_1mean, team1_2mean])
+
+                team2_1 = pd.DataFrame(team2_df.loc[team2_df['team_1'] == team2])
+                team2_2 = pd.DataFrame(team2_df.loc[team2_df['team_2'] == team2])
+                team2_1mean = (team2_1.describe().loc[['mean']]).loc['mean', 'score_1']
+                team2_2mean = (team2_2.describe().loc[['mean']]).loc['mean', 'score_2']
+                team2_mean = np.mean([team2_1mean, team2_2mean])
+
                 winner = ''
 
                 # 점수 토탈
-                team1_total = 2 * len(team1_win) + team1_goal
-                team2_total = 2 * len(team2_win) + team2_goal
+                team1_total = len(team1_win) + team1_goal + team1_mean
+                team2_total = len(team2_win) + team2_goal + team2_mean
 
                 if team1_total > team2_total:
                     winner = team1
