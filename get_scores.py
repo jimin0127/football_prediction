@@ -33,19 +33,17 @@ for football in naver_wfootball:
     driver.get(football)
 
     page = driver.page_source
-    premi_team_score_list = BeautifulSoup(page, "html.parser")
-    team_rank_list = premi_team_score_list.select('.schedule_month_area> .schedule_month_table >table>tbody>tr')
+    premier_team_score_list = BeautifulSoup(page, "html.parser")
+    team_rank_list = premier_team_score_list.select('.schedule_month_area> .schedule_month_table >table>tbody>tr')
 
     for team in team_rank_list:
         try:
             left_team = team.select('.team_left > .name')[0].text
-            #print(team.select('team_left>.name'))
             left_score = team.select('.team_left > .score')[0].text
             right_team = team.select('.team_right>.name')[0].text
             right_score = team.select('.team_right>.score')[0].text
             series = Series([left_team, left_score, right_team, right_score], index= index_list)
             premier_team_score = premier_team_score.append(series, ignore_index=True)
-            #print(ranking+1, left_team, left_score, ':', right_score, right_team)
         except:
             continue
 
